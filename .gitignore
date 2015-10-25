@@ -1,5 +1,4 @@
 .codelite
-Makefile
 *.workspace
 runme
 .clang

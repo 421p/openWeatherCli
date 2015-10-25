@@ -60,7 +60,7 @@ AS       := /usr/bin/as
 ## User defined environment variables
 ##
 CodeLiteDir:=/usr/share/codelite
-Objects0=$(IntermediateDirectory)/main.cpp$(ObjectSuffix) 
+Objects0=$(IntermediateDirectory)/main.cc$(ObjectSuffix) 
 
 
 
@@ -84,6 +84,8 @@ MakeIntermediateDirs:
 
 $(IntermediateDirectory)/.d:
 	@test -d ./Debug || $(MakeDirCommand) ./Debug
+PrePreBuild: all:
+	clang++ -std=c++11 main.cc -o runme -lcurl
 
 PreBuild:
 
@@ -91,13 +93,13 @@ PreBuild:
 ##
 ## Objects
 ##
-$(IntermediateDirectory)/main.cpp$(ObjectSuffix): main.cpp $(IntermediateDirectory)/main.cpp$(DependSuffix)
-	$(CXX) $(IncludePCH) $(SourceSwitch) "/home/forester/dev/c/MeteoData/openWeatherCli/main.cpp" $(CXXFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/main.cpp$(ObjectSuffix) $(IncludePath)
-$(IntermediateDirectory)/main.cpp$(DependSuffix): main.cpp
-	@$(CXX) $(CXXFLAGS) $(IncludePCH) $(IncludePath) -MG -MP -MT$(IntermediateDirectory)/main.cpp$(ObjectSuffix) -MF$(IntermediateDirectory)/main.cpp$(DependSuffix) -MM "main.cpp"
+$(IntermediateDirectory)/main.cc$(ObjectSuffix): main.cc $(IntermediateDirectory)/main.cc$(DependSuffix)
+	$(CXX) $(IncludePCH) $(SourceSwitch) "/home/forester/dev/c/MeteoData/openWeatherCli/main.cc" $(CXXFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/main.cc$(ObjectSuffix) $(IncludePath)
+$(IntermediateDirectory)/main.cc$(DependSuffix): main.cc
+	@$(CXX) $(CXXFLAGS) $(IncludePCH) $(IncludePath) -MG -MP -MT$(IntermediateDirectory)/main.cc$(ObjectSuffix) -MF$(IntermediateDirectory)/main.cc$(DependSuffix) -MM "main.cc"
 
-$(IntermediateDirectory)/main.cpp$(PreprocessSuffix): main.cpp
-	@$(CXX) $(CXXFLAGS) $(IncludePCH) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/main.cpp$(PreprocessSuffix) "main.cpp"
+$(IntermediateDirectory)/main.cc$(PreprocessSuffix): main.cc
+	@$(CXX) $(CXXFLAGS) $(IncludePCH) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/main.cc$(PreprocessSuffix) "main.cc"
 
 
 -include $(IntermediateDirectory)/*$(DependSuffix)
