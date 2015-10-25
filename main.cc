@@ -24,7 +24,8 @@ enum string_code {
     UNKNOWN,
     COMPARE,
     CHECK,
-    HELP
+    HELP,
+    LIST
 };
 
 string_code hashIt(std::string const& inString) {
@@ -32,57 +33,49 @@ string_code hashIt(std::string const& inString) {
     if (inString == "check" || inString == "CHECK") return CHECK;
     if (inString == "compare" || inString == "COMPARE") return COMPARE;
     if (inString == "help" || inString == "HELP") return HELP;
+    if (inString == "list" || inString == "LIST") return LIST;
     
     return UNKNOWN;
 }
 
 int main()
 {
-    /*string city = "Kiev";
-    
-    openWeatherList *ls = new openWeatherList;
-    ifstream ifs("inputs/citys.list");
-    
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            
-    for(char* buff = new char[64];ifs >> buff;ls->add(buff));
-    
-    ls->showTemperatureList();
-    */
-    //ls->showList();
-    
     std::string buffer;
     openWeather *ow = new openWeather;
     
     std::string helpContent = "\ncheck %cityname% - for check city.\ncompare %cityname_1% %cityname_2% - for compare 2 cities.\n";
     
+    auto citylist = [](std::string dir) -> void{
+
+        ifstream ifs(dir);
+        openWeatherList *ls = new openWeatherList;                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               
+        for(char* buff = new char[64];ifs >> buff;ls->add(buff));
+        ls->showTemperatureList();
+    };
+    
     auto check = [&ow](std::string city) -> void {
         ow->reinit(city); 
-        std::cout << city << ": " << ow->getTemperature() << 
-                " C. Wind speed is " << ow->getWindSpeed() << " m/s. Humidity: " 
-                << ow->getHumidity(); 
+        ow->tellMe(); 
     };
     
     auto compare = [&ow](std::string city_1, std::string city_2) -> void{
         
-        ow->reinit(city_1); 
+        ow->reinit(city_1);
+        ow->tellMe();
         struct{ std::string name; double temperature, windSpeed, humidity; } firstCity = { city_1, ow->getTemperature(), ow->getWindSpeed(), ow->getHumidity()};
         ow->reinit(city_2); 
+        ow->tellMe();
         struct{ std::string name; double temperature, windSpeed, humidity; } secondCity = { city_2, ow->getTemperature(), ow->getWindSpeed(), ow->getHumidity()};
+
+        std::cout << std::endl;
         
-        std::cout << firstCity.name << ": " << firstCity.temperature << 
-                " C. Wind speed is " << firstCity.windSpeed << " m/s. Humidity: " 
-                << firstCity.humidity << std::endl << 
-                secondCity.name << ": " << secondCity.temperature << 
-                " C. Wind speed is " << secondCity.windSpeed << " m/s. Humidity: " 
-                << secondCity.humidity  << "\n\n";
-                
         if(firstCity.temperature > secondCity.temperature) 
             std:: cout << "Temperature in " << firstCity.name << " higher than in " <<
             secondCity.name << " by " << firstCity.temperature - secondCity.temperature << " degrees. ";
         else
             std:: cout << "Temperature in " << secondCity.name << " higher than in " <<
             firstCity.name << " by " << secondCity.temperature - firstCity.temperature << " degrees. ";
-            
+
         if(firstCity.windSpeed > secondCity.windSpeed) 
             std:: cout << "Wind speed in " << firstCity.name << " higher than in " <<
             secondCity.name << " by " << firstCity.windSpeed - secondCity.windSpeed << " m/s. ";
@@ -105,13 +98,15 @@ int main()
         cout << "\n> "; getline(cin, buffer);
         auto vc = explode(buffer, ' ');
         switch(hashIt(vc[0])){
-            case EXIT : cout << "bye!";return 0;
+            case EXIT : cout << "bye!\n";return 0;
             break;
             case UNKNOWN : cout << "unknown command.";
             break;
             case CHECK : check(vc[1]);
             break;
             case COMPARE : compare(vc[1], vc[2]);
+            break;
+            case LIST: citylist(vc[1]);
             break;
             case HELP : cout << helpContent;
             break;

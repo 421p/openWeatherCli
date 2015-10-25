@@ -1,7 +1,9 @@
+#ifndef ___SIMPLE_CURL_INCLUDED___
+#define ___SIMPLE_CURL_INCLUDED___
+
 #include <curl/curl.h>
 #include <sstream>
 #include <string>
-#include <iostream>
 
 class simpleCurl{
     CURL *geter;
@@ -50,8 +52,9 @@ class simpleCurl{
     virtual ~simpleCurl(){ close(); } 
     
     std::string getResponce(){
-        std::string resp = stream.str();
-        return resp;
+        return stream.str();
     }
     
 };
+
+#endif

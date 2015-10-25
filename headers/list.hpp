@@ -1,12 +1,13 @@
 #include <string>
+#include <iostream>
 
+namespace MY{
+    
 class Node{
     public: std::string value;
     Node* next;
     Node* prev;
 };
-
-namespace MY{
 
 class List{
     Node* First;

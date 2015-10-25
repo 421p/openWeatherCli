@@ -2,8 +2,10 @@
 #define ___OPEN_Weather___
 
 #include "simpleCurl.hpp"
-#include <boost/property_tree/ptree.hpp>
-#include <boost/property_tree/json_parser.hpp>
+#include "rxjson.hpp"
+#include <string>
+//#include <boost/property_tree/ptree.hpp>
+//#include <boost/property_tree/json_parser.hpp>
 
 class openWeather : private simpleCurl{
     std::string city;
@@ -12,18 +14,25 @@ class openWeather : private simpleCurl{
     double temperature;
     double windSpeed;
     double humidity;
+    std::string sky;
     
     void getDataFromJSON(){
-        std::stringstream stream(simpleCurl::getResponce());
+        //std::stringstream stream(simpleCurl::getResponce());
         try{
-            boost::property_tree::ptree pt;
+            /*boost::property_tree::ptree pt;
             boost::property_tree::read_json(stream, pt);
             temperature = pt.get<double>("main.temp") - 273.15;
             windSpeed = pt.get<double>("wind.speed");
-            humidity = pt.get<double>("main.humidity");
+            humidity = pt.get<double>("main.humidity");*/
+            
+            rxjson::openWeatherJSONregexParser parser(simpleCurl::getResponce());
+            auto parsed = parser.parse();
+            temperature = stod(parsed.temp) - 273.15;
+            windSpeed = stod(parsed.wind);
+            humidity = stod(parsed.humidity);
+            sky = parsed.sky;
         } catch (...){
-            std::cerr << "oshibka\n" << 
-            stream.str() << '\n';
+            std::cerr << "oshibka\n";
         }
 
     }
@@ -43,8 +52,7 @@ class openWeather : private simpleCurl{
         openWeather(){}
     
     std::string getResponce(){
-        std::string resp = simpleCurl::getResponce();
-        return resp;
+        return simpleCurl::getResponce();
     }
     
     void reinit(std::string cityName){
@@ -53,6 +61,12 @@ class openWeather : private simpleCurl{
         simpleCurl::close();
         simpleCurl::init(request_url);
         getDataFromJSON();
+    }
+    
+    void tellMe(){
+       std::cout << city << ": " << sky << ", temperature is " << temperature <<
+                " C. Wind speed is " << windSpeed << " m/s. Humidity: " <<
+                humidity << "%.\n";
     }
     
     double getTemperature(){
