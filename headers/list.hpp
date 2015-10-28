@@ -1,34 +1,30 @@
 #include <string>
 #include <iostream>
 
-namespace MY{
-    
-class Node{
+class myNode{
     public: std::string value;
-    Node* next;
-    Node* prev;
+    myNode* next;
+    myNode* prev;
 };
 
-class List{
-    Node* First;
-    Node* Last;
+class myList{
+    myNode* First;
+    myNode* Last;
     unsigned size;
     public:
-        List():First(NULL),Last(NULL),size(0){};
-        ~List();
-    
+        myList():First(NULL),Last(NULL),size(0){};
+        ~myList(){
+           for(; First; Last=First->next, delete First, First=Last);
+        }
+
     void add(std::string);
     void removeLast();
-    void showList();
+    void showmyList();
     unsigned getSize();
 };
 
-List::~List(){
-   for(; First; Last=First->next, delete First, First=Last);
-}
-
-void List::add(std::string value){
-   Node *temp= new Node;
+void myList::add(std::string value){
+   myNode *temp= new myNode;
    temp->next=NULL; 
    temp->value=value;
    
@@ -43,8 +39,8 @@ void List::add(std::string value){
    size++;
 }
 
-void List::removeLast(){
-    Node *temp = Last->prev;
+void myList::removeLast(){
+    myNode *temp = Last->prev;
     if(temp){
         temp->next = NULL;
         delete Last;
@@ -53,12 +49,11 @@ void List::removeLast(){
     size--;
 }
 
-void List::showList(){
-    for(Node *temp=First; temp; std::cout << temp->value << std::endl, temp=temp->next);
+void myList::showmyList(){
+    for(myNode *temp=First; temp; std::cout << temp->value << std::endl, temp=temp->next);
 }
 
-unsigned List::getSize(){
+unsigned myList::getSize(){
     return this->size;
 }
 
-}

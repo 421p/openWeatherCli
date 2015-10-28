@@ -1,38 +1,55 @@
 #ifndef ___OPEN_Weather___
 #define ___OPEN_Weather___
 
-#include "simpleCurl.hpp"
-#include "rxjson.hpp"
+#include "simpleBoostRequester.hpp"
+#include "weatherParser.hpp"
 #include <string>
-//#include <boost/property_tree/ptree.hpp>
-//#include <boost/property_tree/json_parser.hpp>
+#include <exception>
 
-class openWeather : private simpleCurl{
+#include <boost/foreach.hpp>
+
+class openWeather : private uskorenie::simpleRequest{
     std::string city;
     std::string api_key = "dfefcda6e03767b59db85935bcf221f0";
+    std::string request_host = "162.243.58.21";
     std::string request_url;
     double temperature;
     double windSpeed;
     double humidity;
     std::string sky;
     
-    void getDataFromJSON(){
-        //std::stringstream stream(simpleCurl::getResponce());
+    std::string removeHeader(std::string json){
+                size_t found = json.find_first_of("{");
+                json.erase(json.begin(), json.begin() + found);
+                return std::string(json);
+    }
+    
+    void getDataFromJSON(std::string in_str){
+        //std::stringstream stream();
         try{
-            /*boost::property_tree::ptree pt;
-            boost::property_tree::read_json(stream, pt);
-            temperature = pt.get<double>("main.temp") - 273.15;
-            windSpeed = pt.get<double>("wind.speed");
-            humidity = pt.get<double>("main.humidity");*/
+            // boost::property_tree::ptree pt;
+            // boost::property_tree::read_json(stream, pt);
             
-            rxjson::openWeatherJSONregexParser parser(simpleCurl::getResponce());
-            auto parsed = parser.parse();
-            temperature = stod(parsed.temp) - 273.15;
-            windSpeed = stod(parsed.wind);
-            humidity = stod(parsed.humidity);
-            sky = parsed.sky;
-        } catch (...){
-            std::cerr << "oshibka\n";
+            // temperature = pt.get<double>("main.temp") - 273.15;
+            // windSpeed = pt.get<double>("wind.speed");
+            // humidity = pt.get<double>("main.humidity");
+            
+            // for(auto child : pt.get_child("weather")){
+            //     sky = child.second.get<std::string>("description"); 
+            // }
+            
+            uskorenie::weatherBoostPoweredJSONparser parser(removeHeader(in_str));
+            
+            auto data = parser.parse();
+            
+            temperature = data.temperature;
+            windSpeed = data.windSpeed;
+            humidity = data.humidity;
+            sky = data.sky;
+            
+        } catch (std::exception &e){
+            std::cerr << e.what() << '\n';
+            //stream.str() << '\n';
         }
 
     }
@@ -40,9 +57,9 @@ class openWeather : private simpleCurl{
     public:
     void init(std::string cityName){
             city = cityName;
-            request_url = "http://api.openweathermap.org/data/2.5/weather?q=" + city + "&APPiD=" + api_key;
-            simpleCurl::init(request_url);
-            getDataFromJSON();
+            request_url = "GET /data/2.5/weather?q=" + city + "&APPiD=" + api_key + " HTTP/1.0\r\n\r\n";
+            
+            getDataFromJSON(simpleRequest::sendRequest(request_host, request_url));
     }
 
     
@@ -51,16 +68,8 @@ class openWeather : private simpleCurl{
         }
         openWeather(){}
     
-    std::string getResponce(){
-        return simpleCurl::getResponce();
-    }
-    
-    void reinit(std::string cityName){
-        city = cityName;
-        request_url = "http://api.openweathermap.org/data/2.5/weather?q=" + cityName + "&APPiD=" + api_key;
-        simpleCurl::close();
-        simpleCurl::init(request_url);
-        getDataFromJSON();
+    std::string getResponse(){
+        return std::string(simpleRequest::getResponse());
     }
     
     void tellMe(){
