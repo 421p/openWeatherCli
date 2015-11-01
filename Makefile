@@ -6,4 +6,4 @@ gcc:
 project:	
 	clang++ -std=c++11 main.cc -o openWeathercli -lboost_system
 run:
-	./openWeatherCl
+	./openWeatherCli

@@ -50,7 +50,7 @@ namespace uskorenie{
                 response.append(buf, buf + bytes_transferred);
             } while (!ec);
             
-            return std::string(response);
+            return response;
     
         }
         

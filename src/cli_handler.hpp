@@ -28,12 +28,11 @@ class cliHandler{
     
         string_code hashIt(std::string const& inString);
         std::vector<std::string> explode(std::string const & s, char delim);
+        
+        public:
         void compare(std::string city_1, std::string city_2);
         void check (std::string city);
         void citylist(std::string dir);
-        
-        
-    public:
         void initMainFrame();
         cliHandler():ow(new openWeather), conf("config/settings.json"){}
         ~cliHandler(){delete ow;}
