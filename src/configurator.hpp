@@ -7,8 +7,8 @@
 
 class configurator : private uskorenie::simpleBoostPoweredJSONparser{
 	public:
-		configurator(std::string configDirectory):simpleBoostPoweredJSONparser(std::ifstream(configDirectory)){}
-		configurator(const char *configDirectory):simpleBoostPoweredJSONparser(std::ifstream(configDirectory)){}
+		configurator(std::string configDirectory):simpleBoostPoweredJSONparser([&configDirectory]()->std::ifstream&{std::ifstream *ret = new std::ifstream(configDirectory); return *ret;}()){}
+		configurator(const char *configDirectory):simpleBoostPoweredJSONparser([&configDirectory]()->std::ifstream&{std::ifstream *ret = new std::ifstream(configDirectory); return *ret;}()){}
         
         std::string getValue(std::string selector){
             return simpleBoostPoweredJSONparser::parseString(selector.c_str());

@@ -8,9 +8,9 @@ namespace uskorenie{
 
     class worldBoostPoweredJSONparser : private simpleBoostPoweredJSONparser{
     public:
-            worldBoostPoweredJSONparser(std::stringstream ss):simpleBoostPoweredJSONparser(std::stringstream(ss.str())){}
-            worldBoostPoweredJSONparser(std::string dir):simpleBoostPoweredJSONparser(std::ifstream(dir)){}
-            worldBoostPoweredJSONparser(const char *dir):simpleBoostPoweredJSONparser(std::ifstream(dir)){}
+            worldBoostPoweredJSONparser(std::stringstream &ss):simpleBoostPoweredJSONparser(ss){}
+            worldBoostPoweredJSONparser(std::string dir):simpleBoostPoweredJSONparser([&dir]()->std::ifstream&{std::ifstream *ret = new std::ifstream(dir); return *ret;}()){}
+            worldBoostPoweredJSONparser(const char *dir):simpleBoostPoweredJSONparser([&dir]()->std::ifstream&{std::ifstream *ret = new std::ifstream(dir); return *ret;}()){}
                         
         void doThisAmazingThingCarefully(){
             auto world = simpleBoostPoweredJSONparser::cheat();

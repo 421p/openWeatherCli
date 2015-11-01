@@ -15,8 +15,8 @@ namespace uskorenie{
         public:
             simpleBoostPoweredJSONparser(std::string json_str):jsonStream(json_str){boost::property_tree::read_json(jsonStream, pt);}
             simpleBoostPoweredJSONparser(const char* json_str):jsonStream(json_str){boost::property_tree::read_json(jsonStream, pt);}
-            simpleBoostPoweredJSONparser(std::ifstream in){boost::property_tree::read_json(in, pt);}
-            simpleBoostPoweredJSONparser(std::stringstream in){boost::property_tree::read_json(in, pt);}
+            simpleBoostPoweredJSONparser(std::ifstream& in){boost::property_tree::read_json(in, pt);}
+            simpleBoostPoweredJSONparser(std::stringstream& in){boost::property_tree::read_json(in, pt);}
 		   	virtual ~simpleBoostPoweredJSONparser(){}
             
             double parseDouble(const char*);
