@@ -4,6 +4,9 @@
 #include <sstream>
 #include <utility>
 #include <vector>
+#include "openWeatherList.hpp"
+#include "openWeather.hpp"
+#include "configurator.hpp"
 
 using namespace std;
 
@@ -19,8 +22,9 @@ enum string_code {
 class cliHandler{
     std::string buffer;
     openWeather *ow;
+    configurator conf;
     
-    std::string helpContent = "\ncheck %cityname% - for check city.\ncompare %cityname_1% %cityname_2% - for compare 2 cities.\n";
+    std::string helpContent = conf.getValue("cliHandler.helpContent");
     
         string_code hashIt(std::string const& inString);
         std::vector<std::string> explode(std::string const & s, char delim);
@@ -31,7 +35,7 @@ class cliHandler{
         
     public:
         void initMainFrame();
-        cliHandler():ow(new openWeather){}
+        cliHandler():ow(new openWeather), conf("config/settings.json"){}
         ~cliHandler(){delete ow;}
 
     
@@ -105,7 +109,7 @@ void cliHandler::compare(std::string city_1, std::string city_2){
 void cliHandler::initMainFrame(){
     
         
-    cout << "\nWelcome to the openWeather cli v0.01a.\nType \"help\" for help.\n";
+    conf.showValue("cliHandler.welcomeMessage");
     
     while(true){
         cout << "\n> "; getline(cin, buffer);

@@ -1,3 +1,6 @@
+#ifndef ___SIMPLE_BOOST_JSON_PARSER_INCLUDED___
+#define ___SIMPLE_BOOST_JSON_PARSER_INCLUDED___
+
 #include <boost/property_tree/ptree.hpp>
 #include <boost/property_tree/json_parser.hpp>
 #include <string>
@@ -12,7 +15,9 @@ namespace uskorenie{
         public:
             simpleBoostPoweredJSONparser(std::string json_str):jsonStream(json_str){boost::property_tree::read_json(jsonStream, pt);}
             simpleBoostPoweredJSONparser(const char* json_str):jsonStream(json_str){boost::property_tree::read_json(jsonStream, pt);}
-            virtual ~simpleBoostPoweredJSONparser(){}
+            simpleBoostPoweredJSONparser(std::ifstream in){boost::property_tree::read_json(in, pt);}
+            simpleBoostPoweredJSONparser(std::stringstream in){boost::property_tree::read_json(in, pt);}
+		   	virtual ~simpleBoostPoweredJSONparser(){}
             
             double parseDouble(const char*);
             int parseInt(const char*);
@@ -38,3 +43,5 @@ namespace uskorenie{
     }
     
 }
+
+#endif

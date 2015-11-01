@@ -11,13 +11,13 @@ namespace uskorenie{
         std::string sky;
     };
     
-    class weatherBoostPoweredJSONparser : simpleBoostPoweredJSONparser{
+    class weatherBoostPoweredJSONparser : private simpleBoostPoweredJSONparser{
         double temperature;
         double humidity;
         double windSpeed;
         std::string sky;
         std::string jsonString;
-        
+		
         public:
             weatherBoostPoweredJSONparser(const char *json_str):simpleBoostPoweredJSONparser(json_str){}
             weatherBoostPoweredJSONparser(std::string json_str):simpleBoostPoweredJSONparser(json_str){}

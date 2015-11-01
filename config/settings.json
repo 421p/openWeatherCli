@@ -1,0 +1,6 @@
+{
+	"cliHandler" : {
+		"welcomeMessage" : "\nWelcome to the openWeather cli v0.01a.\nType \"help\" for help.\n",
+		"helpContent" : "\ncheck %cityname% - for check city.\ncompare %cityname_1% %cityname_2% - for compare 2 cities.\n"
+	}
+}
