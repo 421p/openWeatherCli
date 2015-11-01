@@ -34,6 +34,7 @@ class cliHandler{
         void check (std::string city);
         void citylist(std::string dir);
         void initMainFrame();
+        void initArgumentsHandler(char**);
         cliHandler():ow(new openWeather), conf("config/settings.json"){}
         ~cliHandler(){delete ow;}
 
@@ -128,4 +129,21 @@ void cliHandler::initMainFrame(){
             break;
         }
     }
+}
+
+void cliHandler::initArgumentsHandler(char** argv){
+    
+        switch(hashIt(string(argv[1]))){
+            case UNKNOWN : cout << "unknown command.";
+            break;
+            case CHECK : check(string(argv[2]));
+            break;
+            case COMPARE : compare(string(argv[2]), string(argv[3]));
+            break;
+            case LIST: citylist(string(argv[2]));
+            break;
+            case HELP : cout << helpContent;
+            break;
+        return;
+        }
 }

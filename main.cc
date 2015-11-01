@@ -5,9 +5,10 @@
 
 using namespace std;
 
-int main(){
+int main(int argc, char** argv){
 	cliHandler ch;
-    ch.initMainFrame();
+	
+	argc<2?ch.initMainFrame():ch.initArgumentsHandler(argv);
     
     return 0;
 }
